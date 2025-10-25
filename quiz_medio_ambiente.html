@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz del Medio Ambiente 🌍</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(180deg, #c8e6c9, #a5d6a7);
+    text-align: center;
+    color: #1b5e20;
+    margin: 0;
+    padding: 0;
+  }
+
+  header {
+    background: #2e7d32;
+    color: white;
+    padding: 20px;
+    font-size: 26px;
+    font-weight: bold;
+  }
+
+  .contenedor {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #f1f8e9;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+  }
+
+  h2 {
+    color: #2e7d32;
+  }
+
+  .opcion {
+    background-color: #c8e6c9;
+    border: 2px solid #2e7d32;
+    color: #1b5e20;
+    border-radius: 10px;
+    padding: 12px;
+    margin: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .opcion:hover {
+    background-color: #81c784;
+    color: white;
+  }
+
+  #resultado {
+    font-weight: bold;
+    margin-top: 20px;
+    font-size: 18px;
+  }
+
+  #puntaje {
+    background: #388e3c;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 15px;
+  }
+
+  #btn-siguiente, #btn-reiniciar {
+    background: #43a047;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    cursor: pointer;
+    display: none;
+  }
+
+  #btn-siguiente:hover, #btn-reiniciar:hover {
+    background: #2e7d32;
+  }
+
+  footer {
+    background: #2e7d32;
+    color: white;
+    padding: 15px;
+    font-size: 14px;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<header>🌱 Quiz del Medio Ambiente 🌱</header>
+
+<div class="contenedor">
+  <h2 id="pregunta">Pregunta</h2>
+
+  <div id="opciones"></div>
+
+  <div id="resultado"></div>
+  <div id="puntaje">Puntaje: 0</div>
+
+  <button id="btn-siguiente">Siguiente ➡️</button>
+  <button id="btn-reiniciar">🔄 Volver a jugar</button>
+</div>
+
+<footer>Hecho con 💚 para cuidar el planeta - Proyecto educativo SENA</footer>
+
+<script>
+  const preguntas = [
+    {
+      pregunta: "¿Cuál de estas acciones ayuda más al medio ambiente?",
+      opciones: ["Usar botellas plásticas cada día", "Reciclar y reutilizar materiales", "Dejar la luz encendida todo el tiempo"],
+      correcta: 1
+    },
+    {
+      pregunta: "¿Qué color identifica la caneca del vidrio?",
+      opciones: ["Amarillo", "Verde", "Azul"],
+      correcta: 1
+    },
+    {
+      pregunta: "¿Qué sucede si plantamos más árboles?",
+      opciones: ["Aumenta la contaminación", "Disminuye el oxígeno", "Mejora la calidad del aire"],
+      correcta: 2
+    },
+    {
+      pregunta: "¿Cuál es una fuente de energía renovable?",
+      opciones: ["Energía solar", "Petróleo", "Carbón"],
+      correcta: 0
+    },
+    {
+      pregunta: "¿Qué debemos hacer con las pilas usadas?",
+      opciones: ["Botarlas a la basura común", "Guardarlas en casa", "Llevarlas a un punto de recolección especial"],
+      correcta: 2
+    }
+  ];
+
+  let indice = 0;
+  let puntos = 0;
+
+  const preguntaElem = document.getElementById('pregunta');
+  const opcionesElem = document.getElementById('opciones');
+  const resultadoElem = document.getElementById('resultado');
+  const puntajeElem = document.getElementById('puntaje');
+  const btnSiguiente = document.getElementById('btn-siguiente');
+  const btnReiniciar = document.getElementById('btn-reiniciar');
+
+  function cargarPregunta() {
+    const actual = preguntas[indice];
+    preguntaElem.textContent = actual.pregunta;
+    opcionesElem.innerHTML = "";
+    resultadoElem.textContent = "";
+    actual.opciones.forEach((opcion, i) => {
+      const btn = document.createElement("button");
+      btn.textContent = opcion;
+      btn.classList.add("opcion");
+      btn.addEventListener("click", () => verificarRespuesta(i));
+      opcionesElem.appendChild(btn);
+    });
+  }
+
+  function verificarRespuesta(opcionSeleccionada) {
+    const actual = preguntas[indice];
+    if (opcionSeleccionada === actual.correcta) {
+      resultadoElem.textContent = "✅ ¡Correcto! 🌿";
+      puntos += 10;
+    } else {
+      resultadoElem.textContent = "❌ Incorrecto. Intenta aprender de esta pregunta.";
+    }
+    puntajeElem.textContent = "Puntaje: " + puntos;
+
+    // Desactivar botones después de responder
+    document.querySelectorAll('.opcion').forEach(boton => boton.disabled = true);
+
+    // Mostrar botón siguiente o terminar
+    if (indice < preguntas.length - 1) {
+      btnSiguiente.style.display = "inline-block";
+    } else {
+      setTimeout(() => mostrarResultadoFinal(), 1000);
+    }
+  }
+
+  function siguientePregunta() {
+    indice++;
+    btnSiguiente.style.display = "none";
+    cargarPregunta();
+  }
+
+  function mostrarResultadoFinal() {
+    opcionesElem.innerHTML = "";
+    preguntaElem.textContent = "🎉 ¡Has terminado el quiz!";
+    resultadoElem.textContent = `Tu puntaje final es: ${puntos} puntos.`;
+    btnReiniciar.style.display = "inline-block";
+  }
+
+  function reiniciarJuego() {
+    puntos = 0;
+    indice = 0;
+    btnReiniciar.style.display = "none";
+    puntajeElem.textContent = "Puntaje: 0";
+    cargarPregunta();
+  }
+
+  btnSiguiente.addEventListener('click', siguientePregunta);
+  btnReiniciar.addEventListener('click', reiniciarJuego);
+
+  cargarPregunta();
+</script>
+
+</body>
+</html>
